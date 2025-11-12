@@ -1727,8 +1727,8 @@ def _check_mm_fp4_problem_size(
 
     if backend != "trtllm" and use_8x4_sf_layout:
         raise ValueError("Only TRTLLM FP4 GEMM supports 8x4 scale factor layout.")
-    if backend != "cudnn" and not use_nvfp4:
-        raise ValueError("Only cudnn FP4 GEMM supports mxfp4 quantization.")
+    #if backend != "cudnn" and not use_nvfp4:
+    #    raise ValueError("Only cudnn FP4 GEMM supports mxfp4 quantization.")
 
     if use_nvfp4 and block_size != 16:
         raise ValueError("nvfp4 only supports block_size = 16.")

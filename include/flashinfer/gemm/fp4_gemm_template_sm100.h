@@ -56,7 +56,7 @@ struct SMTypeAdapter<_1SM> {
   static int const Scale = 1;
   using AtomThrShape = cute::Shape<_1, _1, _1>;
   using EpilogueSchedule = cutlass::epilogue::TmaWarpSpecialized1Sm;
-  using MainloopSchedule = cutlass::gemm::KernelTmaWarpSpecialized1SmNvf4Sm100;
+  using MainloopSchedule = cutlass::gemm::KernelTmaWarpSpecialized1SmMxf4Sm100;
 };
 
 template <>
@@ -64,7 +64,7 @@ struct SMTypeAdapter<_2SM> {
   static int const Scale = 2;
   using AtomThrShape = cute::Shape<_2, _1, _1>;
   using EpilogueSchedule = cutlass::epilogue::TmaWarpSpecialized2Sm;
-  using MainloopSchedule = cutlass::gemm::KernelTmaWarpSpecialized2SmNvf4Sm100;
+  using MainloopSchedule = cutlass::gemm::KernelTmaWarpSpecialized2SmMxf4Sm100;
 };
 
 template <typename>
@@ -109,17 +109,17 @@ size_t genericFp4GemmKernelLauncher(void* D, void const* A, void const* B, void 
     /* // Input A */                                                                                         \
     using ElementA = ElementType;                                                                            \
     using LayoutA = cutlass::layout::RowMajor;                                                               \
-    static constexpr int AlignmentA = 128 / cutlass::sizeof_bits<ElementType>::value;                        \
+    static constexpr int AlignmentA = 128 ;                        \
     /* // Input B */                                                                                         \
     using ElementB = ElementType;                                                                            \
     using LayoutB = cutlass::layout::ColumnMajor;                                                            \
-    static constexpr int AlignmentB = 128 / cutlass::sizeof_bits<ElementType>::value;                        \
+    static constexpr int AlignmentB = 128 ;                        \
     /* // Input C */                                                                                         \
     using ElementC = void;                                                                                   \
     using LayoutC = cutlass::layout::RowMajor;                                                               \
     static constexpr int AlignmentC = 128 / cutlass::sizeof_bits<OutElementType>::value;                     \
                                                                                                              \
-    using SFType = cutlass::float_ue4m3_t;                                                                   \
+    using SFType = cutlass::float_ue8m0_t;                                                                   \
     using ElementCompute = float;                                                                            \
     using ElementAccumulator = float;                                                                        \
     using OperatorClass = cutlass::arch::OpClassTensorOp;                                                    \
@@ -178,8 +178,8 @@ size_t genericFp4GemmKernelLauncher(void* D, void const* A, void const* B, void 
         typename Gemm::GemmKernel::CollectiveMainloop::Sm1xxBlkScaledConfig;                                 \
     using ElementA = typename Gemm::ElementA;                                                                \
     using ElementB = typename Gemm::ElementB;                                                                \
-    using ElementSFA = cutlass::float_ue4m3_t;                                                               \
-    using ElementSFB = cutlass::float_ue4m3_t;                                                               \
+    using ElementSFA = cutlass::float_ue8m0_t;                                                               \
+    using ElementSFB = cutlass::float_ue8m0_t;                                                               \
     using ElementC = void;                                                                                   \
     using ElementD = typename Gemm::ElementD;                                                                \
     using ElementCompute = float;                                                                            \
