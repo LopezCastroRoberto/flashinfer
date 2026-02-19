@@ -1247,15 +1247,13 @@ def test_ragged_transform_multi_cta_short_rows(num_rows, top_k, dtype):
         offsets = torch.zeros(num_rows, device=device, dtype=torch.int32)
 
         # Mix short and long rows. Short rows (4K-8K) are well below chunk_size
-        # on any GPU, so CTAs beyond the first will have chunk_start > length.        
+        # on any GPU, so CTAs beyond the first will have chunk_start > length.
         lengths_list = []
         for i in range(num_rows):
             if i % 2 == 0:
                 lengths_list.append(max_len)
             else:
-                lengths_list.append(
-                    torch.randint(4000, 8000, (1,)).item()
-                )
+                lengths_list.append(torch.randint(4000, 8000, (1,)).item())
         lengths = torch.tensor(lengths_list, device=device, dtype=torch.int32)
 
         output = flashinfer.top_k_ragged_transform(scores, offsets, lengths, top_k)
@@ -1281,6 +1279,7 @@ def test_ragged_transform_multi_cta_short_rows(num_rows, top_k, dtype):
             os.environ.pop("FLASHINFER_TOPK_ALGO", None)
         else:
             os.environ["FLASHINFER_TOPK_ALGO"] = old_algo
+
 
 if __name__ == "__main__":
     # Basic tests
